@@ -3,8 +3,6 @@ import Config
 config :bot,
   guild_ids: ["id"]
 
-
-
 config :nostrum,
   token: "",
   gateway_intents: [

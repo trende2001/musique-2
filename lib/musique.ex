@@ -1,4 +1,5 @@
 defmodule Musique.Core.App do
+  @moduledoc false
   use Application
 
   def start(_type, _args) do
@@ -7,6 +8,7 @@ defmodule Musique.Core.App do
       Musique.Core.EventConsumer,
       Musique.Core.ETS
     ]
+
     Supervisor.start_link(children, strategy: :one_for_one)
   end
 end

@@ -7,28 +7,29 @@ defmodule Musique.Commands.General.Ping do
 
   @behaviour Nosedrum.ApplicationCommand
 
-  def name(), do: "ping"
+  def name, do: "ping"
 
   @impl true
-  def description(), do: "Ping the bot to check for lifesigns."
+  def description, do: "Ping the bot to check for lifesigns."
 
   @impl true
   def command(%Nostrum.Struct.Interaction{} = _interaction) do
-      latencies = Util.get_all_shard_latencies()
+    latencies =
+      Util.get_all_shard_latencies()
       |> Map.values()
 
-      latency = Enum.sum(latencies) / length(latencies)
+    latency = Enum.sum(latencies) / length(latencies)
 
-      embed = %Nostrum.Struct.Embed{}
+    embed =
+      %Nostrum.Struct.Embed{}
       |> put_title("Pong! 🏓")
       |> put_description("#{Decimal.normalize(Decimal.from_float(latency))}ms")
 
-
-      [
-        embeds: [embed]
-      ]
+    [
+      embeds: [embed]
+    ]
   end
 
   @impl true
-  def type(), do: :slash
+  def type, do: :slash
 end
