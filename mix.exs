@@ -7,7 +7,8 @@ defmodule Musique.MixProject do
       version: "0.1.0",
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: dialyzer()
     ]
   end
 
@@ -27,6 +28,13 @@ defmodule Musique.MixProject do
       {:nostrum, "~> 0.9.1", override: true},
       {:decimal, "~> 2.1"},
       {:nosedrum, git: "https://github.com/jchristgit/nosedrum"}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_core_path: "priv/plts",
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end
 end
