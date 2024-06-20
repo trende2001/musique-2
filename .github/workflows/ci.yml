@@ -1,0 +1,68 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Setup Elixir
+        uses: ./github/actions/elixir-setup
+
+  others:
+    name: Formatting, Credo, unused deps
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Setup Elixir
+        uses: ./.github/actions/elixir-setup
+        with:
+          build-app: false
+
+      - name: Check for unused deps
+        run: mix deps.unlock --check-unused
+
+      - name: Check code formatting
+        run: mix format --check-formatted
+        if: always()
+
+      - name: Run Credo
+        run: mix credo --strict
+        if: always()
+
+  dialyzer:
+    name: Dialyzer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.1.7
+
+      - name: Setup Elixir
+        uses: ./.github/actions/elixir-setup
+        with:
+          build-app: false
+
+      # update this when you change the versions in elixir-setup
+      - name: Restore PLT cache
+        uses: actions/cache@v2
+        id: plt_cache
+        with:
+          key: ${{ runner.os }}-1.17.1-27.0-plt
+          restore-keys: ${{ runner.os }}-1.17.1-27.0-plt
+          path: priv/plts
+
+      - name: Create PLTs
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        run: mix dialyzer --plt
+
+      - name: Run Dialyzer
+        run: mix dialyzer
