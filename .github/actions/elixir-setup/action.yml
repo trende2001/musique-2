@@ -8,6 +8,10 @@ inputs:
     required: false
     type: string
     default: "27.0"
+  build-app:
+    required: false
+    type: boolean
+    default: true
 runs:
   using: "composite"
   steps:
@@ -15,7 +19,8 @@ runs:
       uses: erlef/setup-beam@v1
       with:
         elixir-version: ${{ inputs.elixir-version }}
-        otp-version: ${{ inputs.otp-version }
+        otp-version: ${{ inputs.otp-version }}
+
     - name: Get deps cache
       uses: actions/cache@v2
       with:
@@ -23,6 +28,7 @@ runs:
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: |
           deps-${{ inputs.cache-key }}-${{ runner.os }}-
+
     - name: Get build cache
       uses: actions/cache@v2
       id: build-cache
@@ -31,7 +37,14 @@ runs:
         key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: |
           build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-
-    - name: Dependencies
+
+    - name: Install Dependencies
       run: |
         mix deps.get
         mix deps.compile
+      shell: sh
+    
+    - name: Compile application
+      run: mix compile --all-warnings --warnings-as-errors
+      shell: sh
+      if: inputs.build-app == 'true'
