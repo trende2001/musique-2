@@ -1,4 +1,5 @@
 defmodule Musique.Core.EventConsumer do
+  @moduledoc false
   use Nostrum.Consumer
   require Logger
 
@@ -10,13 +11,12 @@ defmodule Musique.Core.EventConsumer do
   # messages off to Nosedrum.Storage.Dispatcher
 
   # On bot ready
-  def handle_event({:READY, %Nostrum.Struct.Event.Ready{} = event, ws_state}) do
+  def handle_event({:READY, %Nostrum.Struct.Event.Ready{} = _event, _ws_state}) do
     AppCommandLoader.load_all()
   end
 
   # On interaction create
-  def handle_event({:INTERACTION_CREATE, intr, _}), do:
-    Dispatcher.handle_interaction(intr)
+  def handle_event({:INTERACTION_CREATE, intr, _}), do: Dispatcher.handle_interaction(intr)
 
   def handle_event(_), do: :noop
 end

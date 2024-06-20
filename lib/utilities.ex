@@ -4,8 +4,9 @@ defmodule Musique.Utilities do
   """
 
   require Logger
-  alias Nostrum.Voice
   alias Nostrum.Cache.GuildCache
+  alias Nostrum.Cache.Me
+  alias Nostrum.Voice
 
   @spec play_when_ready(non_neg_integer(), any(), :pipe | :raw | :raw_s | :stream | :url | :ytdl) ::
           :ok | {:error, <<_::312, _::_*80>>}
@@ -34,16 +35,17 @@ defmodule Musique.Utilities do
         try_play(guild_id, url, type, opts)
 
         Logger.error(msg)
+
       _ ->
         :ok
     end
   end
 
   @spec get_voice_channel_of_interaction(%{
-    :guild_id => non_neg_integer(),
-    :user => %{:id => any(), optional(any()) => any()},
-    optional(any()) => any()
-  }) :: any()
+          :guild_id => non_neg_integer(),
+          :user => %{:id => any(), optional(any()) => any()},
+          optional(any()) => any()
+        }) :: any()
   def get_voice_channel_of_interaction(%{guild_id: guild_id, user: %{id: user_id}} = _interaction) do
     guild_id
     |> GuildCache.get!()
@@ -52,9 +54,8 @@ defmodule Musique.Utilities do
     |> Map.get(:channel_id)
   end
 
-
   def bot_in_voice_channel?(guild_id, vc_id) do
-    bot_id = Nostrum.Cache.Me.get().id
+    bot_id = Me.get().id
 
     guild_id
     |> GuildCache.get!()

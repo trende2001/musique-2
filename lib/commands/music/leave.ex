@@ -6,11 +6,10 @@ defmodule Musique.Commands.Music.Leave do
 
   @behaviour Nosedrum.ApplicationCommand
 
-  def name(), do: "leave"
+  def name, do: "leave"
 
   @impl true
-  def description(), do: "Leave the current channel bot is in."
-
+  def description, do: "Leave the current channel bot is in."
 
   @impl true
   def command(%Nostrum.Struct.Interaction{} = interaction) do
@@ -23,6 +22,7 @@ defmodule Musique.Commands.Music.Leave do
 
       _vc_id ->
         Voice.leave_channel(interaction.guild_id)
+
         [
           content: "Left your voice channel"
         ]
@@ -30,5 +30,5 @@ defmodule Musique.Commands.Music.Leave do
   end
 
   @impl true
-  def type(), do: :slash
+  def type, do: :slash
 end
