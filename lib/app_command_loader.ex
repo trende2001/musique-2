@@ -4,7 +4,7 @@ defmodule Musique.Core.AppCommandLoader do
 
   alias Nosedrum.Storage.Dispatcher
 
-  def load_all() do
+  def load_all do
     get_all_command_modules()
     |> filter_application_commands()
     |> queue_commands()

@@ -1,4 +1,5 @@
 defmodule Musique.Commands.Music.Leave do
+  @moduledoc false
   alias Musique.Utilities
   alias Nostrum.Voice
 

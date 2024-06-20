@@ -30,7 +30,7 @@ defmodule Musique.Core.ETS do
     end)
   end
 
-  def remove_all() do
+  def remove_all do
     Agent.update(__MODULE__, fn _state ->
       :ets.delete_all_objects(:musique)
     end)
