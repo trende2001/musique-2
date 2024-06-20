@@ -18,23 +18,5 @@ defmodule Musique.Core.EventConsumer do
   def handle_event({:INTERACTION_CREATE, intr, _}), do:
     Dispatcher.handle_interaction(intr)
 
-  def handle_event({:VOICE_READY, payload, _}) do
-    Logger.debug(inspect(payload))
-    Process.sleep(2000)
-    Logger.info(inspect(Nostrum.Voice.get_voice(payload.guild_id)))
-  end
-
-  def handle_event({:VOICE_SPEAKING_UPDATE, payload, _}) do
-    Logger.debug(inspect(payload))
-  end
-
-  def handle_event({:VOICE_STATE_UPDATE, payload, _}) do
-    Logger.debug(inspect(payload))
-  end
-
-  def handle_event({:VOICE_SERVER_UPDATE, payload, _}) do
-    Logger.debug(inspect(payload))
-  end
-
   def handle_event(_), do: :noop
 end
