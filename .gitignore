@@ -21,7 +21,15 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 musique2-*.tar
-config/runtime.exs
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Secret config
+/config/runtime.exs
+
+# ElixirLS
+/.elixir_ls/
+
+# Dialyzer PLT
+/priv/
