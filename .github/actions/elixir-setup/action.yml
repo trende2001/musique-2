@@ -22,7 +22,7 @@ runs:
         otp-version: ${{ inputs.otp-version }}
 
     - name: Get deps cache
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v4
       with:
         path: deps/
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
@@ -30,10 +30,10 @@ runs:
           deps-${{ inputs.cache-key }}-${{ runner.os }}-
 
     - name: Get build cache
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v4
       id: build-cache
       with:
-        path: _build/${{env.MIX_ENV}}/
+        path: _build/
         key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
         restore-keys: |
           build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-
@@ -44,7 +44,24 @@ runs:
         mix deps.compile
       shell: sh
     
+    - name: Save deps cache
+      uses: actions/cache/save@v4
+      with:
+        path: deps/
+        key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          deps-${{ inputs.cache-key }}-${{ runner.os }}-
+    
     - name: Compile application
       run: mix compile --all-warnings --warnings-as-errors
       shell: sh
       if: inputs.build-app == 'true'
+    
+    - name: Save build cache
+      uses: actions/cache/save@v4
+      id: build-cache
+      with:
+        path: _build/
+        key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-
