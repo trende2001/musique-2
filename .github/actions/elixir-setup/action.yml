@@ -22,7 +22,7 @@ runs:
         otp-version: ${{ inputs.otp-version }}
 
     - name: Get deps cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: deps/
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
@@ -30,7 +30,7 @@ runs:
           deps-${{ inputs.cache-key }}-${{ runner.os }}-
 
     - name: Get build cache
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       id: build-cache
       with:
         path: _build/${{env.MIX_ENV}}/
