@@ -31,7 +31,7 @@ runs:
 
     - name: Get build cache
       uses: actions/cache/restore@v4
-      id: build-cache
+      id: build-cache-restore
       with:
         path: _build/
         key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
@@ -49,8 +49,6 @@ runs:
       with:
         path: deps/
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: |
-          deps-${{ inputs.cache-key }}-${{ runner.os }}-
     
     - name: Compile application
       run: mix compile --all-warnings --warnings-as-errors
@@ -59,9 +57,7 @@ runs:
     
     - name: Save build cache
       uses: actions/cache/save@v4
-      id: build-cache
+      id: build-cache-save
       with:
         path: _build/
         key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: |
-          build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-
