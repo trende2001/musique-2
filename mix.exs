@@ -24,6 +24,7 @@ defmodule Musique.MixProject do
   defp deps do
     [
       {:credo, "~> 1.7.7", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:exyt_dlp, "~> 0.1.2"},
       {:nostrum, "~> 0.9.1", override: true},
       {:decimal, "~> 2.1"},
@@ -33,7 +34,7 @@ defmodule Musique.MixProject do
 
   defp dialyzer do
     [
-      plt_core_path: "priv/plts",
+      plt_core_path: "priv/plts/",
       plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
     ]
   end

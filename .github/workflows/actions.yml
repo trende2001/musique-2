@@ -36,10 +36,8 @@ jobs:
           key: plt-cache-key
       - name: Create PLTs
         if: steps.plt-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p priv/plts
-          mix dialyzer --plt
+        run: mix dialyzer --plt
       - name: Run dialyzer
         continue-on-error: true
-        run: mix dialyzer --no-check --halt-exit-status
+        run: mix dialyzer --format github
   
