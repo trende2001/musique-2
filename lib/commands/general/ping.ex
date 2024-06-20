@@ -1,4 +1,5 @@
 defmodule Musique.Commands.General.Ping do
+  @moduledoc false
   require Logger
 
   import Nostrum.Struct.Embed
