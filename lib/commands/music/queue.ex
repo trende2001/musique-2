@@ -40,7 +40,7 @@ defmodule Musique.Commands.Music.Queue do
     else
       embed =
         %Nostrum.Struct.Embed{}
-        |> put_color("16734313")
+        |> put_color(16_734_313)
         |> put_title("Current Queue")
         |> put_description(format_queue(queue))
 

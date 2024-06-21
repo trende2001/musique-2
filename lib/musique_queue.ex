@@ -46,7 +46,7 @@ defmodule Musique.Queue do
               width: 800
             }
           }
-          |> put_color("16734313")
+          |> put_color(16_734_313)
           |> put_title("Now Playing")
           |> put_field("Title", v_title)
           |> put_field("Duration", v_duration)
