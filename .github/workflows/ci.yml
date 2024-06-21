@@ -2,6 +2,10 @@ name: CI
 
 on: [push, pull_request]
 
+env:
+  OTP_VERSION: 27.0
+  ELIXIR_VERSION: 1.17.1
+
 jobs:
   build:
     name: Build
@@ -13,6 +17,26 @@ jobs:
 
       - name: Setup Elixir
         uses: ./.github/actions/elixir-setup
+        with:
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
+
+      - name: Get build cache
+        uses: actions/cache/restore@v4
+        id: build-cache-restore
+        with:
+          path: _build/
+          key: build-${{ runner.os }}-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-${{ hashFiles('**/mix.lock') }}
+
+      - name: Compile application
+        run: mix compile --all-warnings --warnings-as-errors
+
+      - name: Save build cache
+        uses: actions/cache/save@v4
+        id: build-cache-save
+        with:
+          path: _build/
+          key: build-${{ runner.os }}-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-${{ hashFiles('**/mix.lock') }}
 
   others:
     name: Formatting, Credo, unused deps
@@ -25,7 +49,8 @@ jobs:
       - name: Setup Elixir
         uses: ./.github/actions/elixir-setup
         with:
-          build-app: false
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
 
       - name: Check for unused deps
         run: mix deps.unlock --check-unused
@@ -49,27 +74,25 @@ jobs:
       - name: Setup Elixir
         uses: ./.github/actions/elixir-setup
         with:
-          build-app: false
+          elixir-version: ${{ env.ELIXIR_VERSION }}
+          otp-version: ${{ env.OTP_VERSION }}
 
-      # update this when you change the versions in elixir-setup
       - name: Restore PLT cache
         uses: actions/cache/restore@v4
         id: plt-cache-restore
         with:
-          key: ${{ runner.os }}-1.17.1-27.0-plt
-          restore-keys: ${{ runner.os }}-1.17.1-27.0-plt
+          key: ${{ runner.os }}-${{ env.ELIXIR_VERSION }}-${{ env.OTP_VERSION }}-plt
           path: priv/plts
 
       - name: Create PLTs
         if: steps.plt-cache-restore.outputs.cache-hit != 'true'
         run: mix dialyzer --plt
-      
-      # update this when you change the versions in elixir-setup
+
       - name: Save PLT cache
         uses: actions/cache/save@v4
         id: plt-cache-save
         with:
-          key: ${{ runner.os }}-1.17.1-27.0-plt
+          key: ${{ runner.os }}-${{ env.ELIXIR_VERSION }}-${{ env.OTP_VERSION }}-plt
           path: priv/plts
 
       - name: Run Dialyzer

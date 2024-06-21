@@ -1,17 +1,11 @@
 name: Setup Elixir
 inputs:
   elixir-version:
-    required: false
+    required: true
     type: string
-    default: "1.17.1"
   otp-version:
-    required: false
+    required: true
     type: string
-    default: "27.0"
-  build-app:
-    required: false
-    type: boolean
-    default: true
 runs:
   using: "composite"
   steps:
@@ -26,38 +20,15 @@ runs:
       with:
         path: deps/
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: |
-          deps-${{ inputs.cache-key }}-${{ runner.os }}-
-
-    - name: Get build cache
-      uses: actions/cache/restore@v4
-      id: build-cache-restore
-      with:
-        path: _build/
-        key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
-        restore-keys: |
-          build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-
 
     - name: Install Dependencies
       run: |
         mix deps.get
         mix deps.compile
       shell: sh
-    
+
     - name: Save deps cache
       uses: actions/cache/save@v4
       with:
         path: deps/
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
-    
-    - name: Compile application
-      run: mix compile --all-warnings --warnings-as-errors
-      shell: sh
-      if: inputs.build-app == 'true'
-    
-    - name: Save build cache
-      uses: actions/cache/save@v4
-      id: build-cache-save
-      with:
-        path: _build/
-        key: build-${{ runner.os }}-${{ inputs.otp-version }}-${{ inputs.elixir-version }}-${{ env.MIX_ENV }}-${{ hashFiles('**/mix.lock') }}
