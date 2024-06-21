@@ -15,20 +15,16 @@ runs:
         elixir-version: ${{ inputs.elixir-version }}
         otp-version: ${{ inputs.otp-version }}
 
-    - name: Get deps cache
-      uses: actions/cache/restore@v4
+    - name: Dependencies cache
+      uses: actions/cache@v4
       with:
         path: deps/
         key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
+        restore-keys: |
+          deps-${{ runner.os }}-
 
     - name: Install Dependencies
       run: |
         mix deps.get
         mix deps.compile
       shell: sh
-
-    - name: Save deps cache
-      uses: actions/cache/save@v4
-      with:
-        path: deps/
-        key: deps-${{ runner.os }}-${{ hashFiles('**/mix.lock') }}
