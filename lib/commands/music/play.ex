@@ -1,5 +1,7 @@
 defmodule Musique.Commands.Music.Play do
   @moduledoc false
+  alias Musique.Queue
+  alias Musique.Core.ETS
   alias Musique.Utilities
   alias Nostrum.Voice
 
@@ -42,13 +44,14 @@ defmodule Musique.Commands.Music.Play do
       vc_id ->
         case Utilities.bot_in_voice_channel?(interaction.guild_id, vc_id) do
           true ->
-            # get video metadata here (with some ytpdl wrapper)
+            Queue.add(interaction.guild_id, opt_url)
             [
               type: {:deferred_channel_message_with_source, {&deferred/1, [interaction]}}
             ]
 
           false ->
             Voice.join_channel(interaction.guild_id, vc_id)
+            Queue.add(interaction.guild_id, opt_url)
 
             [
               type: {:deferred_channel_message_with_source, {&deferred/1, [interaction]}}
@@ -61,31 +64,6 @@ defmodule Musique.Commands.Music.Play do
   def type, do: :slash
 
   def deferred(%Nostrum.Struct.Interaction{} = interaction) do
-    %{value: url} = List.first(interaction.data.options)
-
-    {_s, v_title} = Exyt.get_title(url)
-    {_s, v_thumb} = Exyt.get_thumbnail(url)
-    {_s, v_duration} = Exyt.get_duration(url)
-
-    Utilities.play_when_ready(interaction.guild_id, url, :ytdl)
-
-    embed =
-      %Nostrum.Struct.Embed{
-        thumbnail: %Nostrum.Struct.Embed.Thumbnail{
-          url: v_thumb,
-          height: 1200,
-          width: 800
-        }
-      }
-      |> put_color(16_734_313)
-      |> put_title("Now Playing")
-      |> put_field("Title", v_title)
-      |> put_field("Duration", v_duration)
-
-    # Nostrum.Api.create_interaction_response!(interaction, [embeds: [embed]])
-
-    [
-      embeds: [embed]
-    ]
+    Queue.play_next(interaction.guild_id)
   end
 end

@@ -18,9 +18,15 @@ defmodule Musique.Core.ETS do
     end)
   end
 
-  def update(type) do
+  def get_all() do
+    Agent.get(__MODULE__, fn _state ->
+      :ets.tab2list(:musique)
+    end)
+  end
+
+  def update(type, value) do
     Agent.update(__MODULE__, fn _state ->
-      :ets.insert(:musique, type)
+      :ets.insert(:musique, {type, value})
     end)
   end
 
