@@ -1,11 +1,9 @@
 defmodule Musique.Commands.Music.Play do
   @moduledoc false
   alias Musique.Queue
-  alias Musique.Core.ETS
   alias Musique.Utilities
   alias Nostrum.Voice
 
-  import Nostrum.Struct.Embed
 
   require Logger
 
