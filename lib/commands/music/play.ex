@@ -34,6 +34,8 @@ defmodule Musique.Commands.Music.Play do
 
   @impl true
   def command(%Nostrum.Struct.Interaction{} = interaction) do
+    %{value: opt_url} = List.first(interaction.data.options)
+
     case Utilities.get_voice_channel_of_interaction(interaction) do
       nil ->
         [
