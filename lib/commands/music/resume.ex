@@ -7,7 +7,7 @@ defmodule Musique.Commands.Music.Resume do
 
   @behaviour Nosedrum.ApplicationCommand
 
-  def name, do: "pause"
+  def name, do: "resume"
 
   @impl true
   def description, do: "Pause the current track"
