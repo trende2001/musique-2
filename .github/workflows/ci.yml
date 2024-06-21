@@ -33,7 +33,7 @@ jobs:
 
       - name: Save build cache
         uses: actions/cache/save@v4
-        id: build-cache-save
+        if: always()
         with:
           path: _build/
           key: build-${{ runner.os }}-${{ env.OTP_VERSION }}-${{ env.ELIXIR_VERSION }}-${{ hashFiles('**/mix.lock') }}
