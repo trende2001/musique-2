@@ -1,4 +1,4 @@
-defmodule Musique.Commands.Music.Pause do
+defmodule Musique.Commands.Music.Resume do
   @moduledoc false
   alias Musique.Utilities
   alias Nostrum.Voice
@@ -26,7 +26,7 @@ defmodule Musique.Commands.Music.Pause do
           Voice.resume(interaction.guild_id)
 
         [
-          content: "Left your voice channel"
+          content: "Resumed current track"
         ]
     end
   end

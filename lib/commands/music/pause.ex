@@ -26,7 +26,7 @@ defmodule Musique.Commands.Music.Pause do
           Voice.pause(interaction.guild_id)
 
         [
-          content: "Left your voice channel"
+          content: "Paused your current track"
         ]
     end
   end
