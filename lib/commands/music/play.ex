@@ -47,6 +47,7 @@ defmodule Musique.Commands.Music.Play do
         case Utilities.bot_in_voice_channel?(interaction.guild_id, vc_id) do
           true ->
             Queue.add(interaction.guild_id, opt_url)
+
             [
               type: {:deferred_channel_message_with_source, {&deferred/1, [interaction]}}
             ]
