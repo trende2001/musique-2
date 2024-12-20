@@ -28,26 +28,22 @@ defmodule Musique.Queue do
   end
 
   def add(guild_id, url) do
-    queue =
-      get(guild_id)
-      |> case do
-        [] -> []
-        [{_key, q}] -> q
-      end
+    queue = get(guild_id)
 
-    update(guild_id, queue ++ [url])
+    case queue do
+      nil ->
+        update(guild_id, [url])
+
+      _ ->
+        update(guild_id, queue ++ [url])
+    end
   end
 
   def play_next(guild_id) do
-    queue =
-      get(guild_id)
-      |> case do
-        [] -> []
-        [{_key, q}] -> q
-      end
+    queue = get(guild_id)
 
     case queue do
-      [] ->
+      nil ->
         :ok
 
       [next_url | rest_of_queue] ->
