@@ -26,9 +26,9 @@ defmodule Musique.MixProject do
       {:credo, "~> 1.7.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:exyt_dlp, "~> 0.1.2"},
-      {:nostrum, "~> 0.10", override: true},
       {:decimal, "~> 2.1"},
-      {:nosedrum, git: "https://github.com/jchristgit/nosedrum"}
+      {:nostrum, github: "Kraigie/nostrum", override: true},
+      {:nosedrum, github: "jchristgit/nosedrum", override: true}
     ]
   end
 

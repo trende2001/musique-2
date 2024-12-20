@@ -11,7 +11,7 @@ defmodule Musique.Core.EventConsumer do
   # messages off to Nosedrum.Storage.Dispatcher
 
   # On bot ready
-  def handle_event({:READY, %Nostrum.Struct.Event.Ready{} = _event, _ws_state}) do
+  def handle_event({:READY, _, _}) do
     AppCommandLoader.load_all()
   end
 
