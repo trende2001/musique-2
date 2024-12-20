@@ -6,7 +6,7 @@ defmodule Musique.Core.App do
     children = [
       Nosedrum.Storage.Dispatcher,
       Musique.Core.EventConsumer,
-      Musique.Core.ETS
+      Musique.Queue
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)
