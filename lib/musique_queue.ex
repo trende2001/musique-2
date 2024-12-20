@@ -7,6 +7,10 @@ defmodule Musique.Queue do
 
   import Nostrum.Struct.Embed
 
+  def child_spec(_) do
+    %{id: __MODULE__, start: {__MODULE__, :start_link, []}}
+  end
+
   def start_link do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
