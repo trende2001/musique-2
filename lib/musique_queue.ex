@@ -2,26 +2,41 @@ defmodule Musique.Queue do
   @moduledoc """
   Handles queue tables per guild. Includes ways to manipulate and query things from the assigned table.
   """
+  use Agent
   alias Musique.Utilities
-  alias Musique.Core.ETS
 
   import Nostrum.Struct.Embed
 
+  def start_link do
+    Agent.start_link(fn -> %{} end, name: __MODULE__)
+  end
+
+  def get(guild_id) do
+    Agent.get(__MODULE__, fn state ->
+      Map.get(state, guild_id)
+    end)
+  end
+
+  def update(guild_id, queue) do
+    Agent.update(__MODULE__, fn state ->
+      Map.replace(state, guild_id, queue)
+    end)
+  end
+
   def add(guild_id, url) do
     queue =
-      ETS.get(guild_id)
+      get(guild_id)
       |> case do
         [] -> []
         [{_key, q}] -> q
       end
 
-    updated_queue = queue ++ [url]
-    ETS.update(guild_id, updated_queue)
+    update(guild_id, queue ++ [url])
   end
 
   def play_next(guild_id) do
     queue =
-      ETS.get(guild_id)
+      get(guild_id)
       |> case do
         [] -> []
         [{_key, q}] -> q
@@ -51,7 +66,7 @@ defmodule Musique.Queue do
           |> put_field("Title", v_title)
           |> put_field("Duration", v_duration)
 
-        ETS.update(guild_id, rest_of_queue)
+        update(guild_id, rest_of_queue)
 
         [
           embeds: [embed]

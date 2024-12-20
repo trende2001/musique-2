@@ -4,7 +4,6 @@ defmodule Musique.Commands.Music.Play do
   alias Musique.Utilities
   alias Nostrum.Voice
 
-
   require Logger
 
   @behaviour Nosedrum.ApplicationCommand

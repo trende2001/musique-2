@@ -1,6 +1,6 @@
 defmodule Musique.Commands.Music.Queue do
   @moduledoc false
-  alias Musique.Core.ETS
+  alias Musique.Queue
 
   import Nostrum.Struct.Embed
 
@@ -26,7 +26,7 @@ defmodule Musique.Commands.Music.Queue do
 
   def deferred(%Nostrum.Struct.Interaction{} = interaction) do
     queue =
-      ETS.get(interaction.guild_id)
+      Queue.get(interaction.guild_id)
       |> case do
         [] -> []
         [{_key, q}] -> q
